@@ -7,8 +7,30 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
 
+// account data
+const accountData = fs.readFileSync(path.join(__dirname, 'json', 'accounts.json'), 'UTF8');
+const accounts = JSON.parse(accountData);
+
+// user data
+const userData = fs.readFileSync(path.join(__dirname, 'json', 'users.json'), 'UTF8');
+const users = JSON.parse(userData);
+
 app.get('/', (req, res) => {
-	res.render('index', {title: 'Index'});
+	res.render('index', {
+		title: 'Account Summary',
+		accounts
+	});
+}).get('/savings', (req, res) => {
+	res.render('account', { account: accounts.savings });
+})
+.get('/checking', (req, res) => {
+	res.render('account', { account: accounts.checking });
+})
+.get('/credit', (req, res) => {
+	res.render('account', { account: accounts.credit });
+})
+.get('/profile', (req, res) => {
+	res.render('profile', { user: users[0] });
 });
 
 app.listen(3000, (err) => {
